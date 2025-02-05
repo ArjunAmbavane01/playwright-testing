@@ -10,12 +10,11 @@ function getRandomNumber(digits) {
   return (Math.floor(Math.random() * (max - min + 1)) + min).toString();
 }
 
-test('should add new journal successfully', async ({ page }) => {
+test('should add new book successfully', async ({ page }) => {
 
-  const paperTitle = `Paper-${getRandomString()}`;
-  const journalTitle = `Journal-${getRandomString()}`;
-  const eISSN = `${getRandomNumber(4)}-${getRandomNumber(4)}`
-  const journalURL = `https://test${getRandomString(4)}.com`;
+  const bookTitle = `bookTitle-${getRandomString()}`;
+  const eISBN = `${getRandomNumber(4)}-${getRandomNumber(4)}`
+  const bookURL = `https://test${getRandomString(4)}.com`;
 
   await page.goto('https://staging.tracer.byteswrite.com/login');
 
@@ -29,57 +28,54 @@ test('should add new journal successfully', async ({ page }) => {
 
   await page.locator('a[href="/user/publications"]').click();
   await expect(page).toHaveURL(/.*publications/);
-  await page.getByRole('link', { name: 'Journal Papers' }).click();
-  await expect(page).toHaveURL(/.*journals/);
+  await page.getByRole('link', { name: 'Book Chapters' }).click();
+  await expect(page).toHaveURL(/.*books/);
   await page.getByRole('link').filter({ hasText: /^$/ }).nth(2).click();
   await expect(page).toHaveURL(/.*add/);
 
-  // Fill Journal Add Form
-  await page.locator('input[name="paperTitle"]').fill(paperTitle);
+  // Fill Book Chapter Add Form
+  await page.locator('input[name="bookTitle"]').fill(bookTitle);
 
-  await page.locator('input[name="journalTitle"]').fill(journalTitle);
-
-  await page.getByRole("combobox").filter({ hasText: "Select Publisher Name" }).click();
-  await page.locator("div").filter({ hasText: /^IEEE$/ }).first().click();
+  await page.locator('input[name="eISBN"]').fill(eISBN);
   
-  await page.getByRole('combobox').filter({ hasText: 'Enter journal type' }).click();
-  await page.getByRole('option', { name: 'International' }).click();
+  await page.getByRole("combobox").filter({ hasText: "Enter publisher name" }).click();
+  await page.locator("div").filter({ hasText: /^Elsevier$/ }).first().click();
+
+  await page.locator('input[name="editorName"]').fill('test-editor');
 
   await page.getByRole('combobox').filter({ hasText: 'Select Author Type' }).click();
   await page.getByRole('option', { name: 'Organizational Researcher' }).click();
 
   await page.getByRole('combobox').filter({ hasText: 'Select Author Name' }).click();
   await page.locator('div').filter({ hasText: /^Arjun Sachin AmbavaneE2401010004$/ }).first().click();
-  
+
   await page.getByRole('combobox').filter({ hasText: 'Enter tags' }).click();
   await page.locator('div').filter({ hasText: /^5G Networks$/ }).first().click();
 
-  await page.locator('input[name="eISSN"]').fill(eISSN);
-  
-  await page.getByRole('combobox').filter({ hasText: 'Enter category' }).click();
-  await page.getByRole('option', { name: 'Submitted' }).click();
-
-  await page.getByRole('button', { name: 'Select submitted date' }).click();
+  await page.getByRole('button', { name: 'Select published date' }).click();
   await page.getByRole('button', { name: 'Tuesday, February 4th,' }).click();
 
+  await page.getByRole('combobox').filter({ hasText: 'Select Country' }).click();
+  await page.getByRole('option', { name: 'India' }).click();
   
-  await page.locator('input[name="journalURL"]').fill(journalURL);
+  await page.getByRole('combobox').filter({ hasText: 'Select State' }).click();
+  await page.getByRole('option', { name: 'Maharashtra' }).click();
+  
+  await page.getByRole('combobox').filter({ hasText: 'Select City' }).click();
+  await page.getByRole('option', { name: 'Pune' }).click();
+  
+  await page.getByRole("combobox").filter({ hasText: "Is Copyright Registered" }).click();
+  await page.locator("div").filter({ hasText: /^No$/ }).first().click();
 
-  await page.getByRole('combobox').filter({ hasText: 'Select Provider' }).click();
-  await page.getByRole('option', { name: 'Web of Science' }).click();
-  
-  await page.getByRole('combobox').filter({ hasText: 'Select Wos Index' }).click();
-  await page.getByLabel('Emerging Sources Citation').getByText('Emerging Sources Citation').click();
-  
-  await page.locator('input[name="indexes[0].impactFactor"]').fill('1');
+  await page.locator('input[name="bookURL"]').fill(bookURL);
 
   await page.getByRole('combobox').filter({ hasText: 'Select Affiliation Details' }).click();
   await page.locator('div').filter({ hasText: /^Aspire Organization, Pune$/ }).first().click();
 
   await page.getByRole('button', { name: 'Submit Details' }).click();
   
-  await expect(page).toHaveURL(/.*journals/);
+  await expect(page).toHaveURL(/.*books/);
 
-  await page.getByText(paperTitle, { exact: true }).click();
+  await page.getByText(bookTitle, { exact: true }).click();
   
 });

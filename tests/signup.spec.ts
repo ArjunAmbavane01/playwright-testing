@@ -4,7 +4,7 @@ function getRandomString(length = 8) {
   return Math.random().toString(36).substring(2, 2 + length);
 }
 
-function getRandomNumber(digits) {
+function getRandomNumber(digits:number) {
   const min = Math.pow(10, digits - 1);
   const max = Math.pow(10, digits) - 1;
   return (Math.floor(Math.random() * (max - min + 1)) + min).toString();
@@ -34,7 +34,6 @@ test("should fill signup form successfully", async () => {
   const ScholarURL = `https://scholar.google.com/citations?user=${getRandomNumber(5)}`;
   const ScopusURL = `https://scopus.com/authid/detail.uri?authorId=${getRandomNumber(5)}`;
   
-
   await expect(page).toHaveURL(/.*form/);
 
   // Fill Title
@@ -86,7 +85,7 @@ test("should fill signup form successfully", async () => {
 
     // Fill Domain Expertise
     await page.getByRole("combobox").filter({hasText: "Select your areas of expertise or professional interests"}).click();
-    await page.locator("div") .filter({ hasText: /^Education Technology$/ }).first().click();
+    await page.locator("div").filter({ hasText: /^Education Technology$/ }).first().click();
     await page.locator("div").filter({ hasText: /^Educational Psychology$/ }).first().click();
 
     // Fill Bio
