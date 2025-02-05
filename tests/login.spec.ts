@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test('should manual login successfully', async ({ page }) => {
+test('should login successfully', async ({ page }) => {
   await page.goto('https://staging.tracer.byteswrite.com/login');
 
   await page.locator('input[name="username"]').fill('E2401010004');
